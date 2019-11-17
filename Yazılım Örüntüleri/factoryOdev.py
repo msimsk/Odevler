@@ -1,45 +1,66 @@
-import json
-import  urllib.request as url
-
-class Currency:
-    def __init__(self):
-        self.alisFiyati = None
-        self.satisFiyati = None
-
-    def getAlisFiyati(self):
-        return self.alisFiyati
-    def getSatisFiyati(self):
-        return self.satisFiyati
+import requests
 
 
+class Euro:
+    prices = []
 
-class USD(Currency):
-    def __init__(self,alisFiyati,satisFiyati):
-        print(f"1 BTC Dolar olarak Alış Fiyatı:{alisFiyati}$ Satış Fiyatı:{satisFiyati}$")
-class PLN(Currency):
-    def __init__(self,alisFiyati,satisFiyati):
-        print(f"1 BTC Polonya Zlotisi olarak Alış Fiyatı:{alisFiyati}zł Satış Fiyatı:{satisFiyati}zł")
-class EUR(Currency):
-    def __init__(self, alisFiyati, satisFiyati):
-        print(f"1 BTC Euro olarak Alış Fiyatı:{alisFiyati}€ Satış Fiyatı:{satisFiyati}€")
+    def __init__(self, sell):
+        self.prices.append(sell)
+
+    def goster():
+        print("EUR" + str(Euro.prices))
+
+
+class CADollar:
+    prices = []
+
+    def __init__(self, sell):
+        self.prices.append(sell)
+
+    def goster():
+        print("CAD:" + str(CADollar.prices))
+
+class USDollar:
+    prices = []
+
+    def __init__(self, sell):
+        self.prices.append(sell)
+
+    def goster():
+         print("USD:" + str(USDollar.prices))
 
 class Factory:
-    def getCurrency(self,k,veri):
-       if k == "USD":
-          return USD(veri['buy'],veri['sell'])
-       if k == "PLN":
-          return PLN(veri['buy'], veri['sell'])
-       if k == "EUR":
-           return EUR(veri['buy'], veri['sell'])
+    def setCrypto(self, cryptoName, sell):
+        if cryptoName == 'EUR':
+            Euro(sell)
+        elif cryptoName == 'CAD':
+            CADollar(sell)
+        elif cryptoName == 'USD':
+            USDollar(sell)
+
+
+class Goster:
+    def factory(many):
+        if many == 'EUR':
+            Euro.goster()
+        elif many == 'CAD':
+            CADollar.goster()
+        elif many == 'USD':
+            USDollar.goster()
+        else:
+            print(many + " verisi bulunmamaktadır!!!")
 
 
 
-
-jsonurl = url.urlopen("https://blockchain.info/ticker")
-veri = json.load(jsonurl)
 
 factory = Factory()
+istek = requests.get("https://blockchain.info/ticker").json()
 
-for k,v in veri.items():
-    factory.getCurrency(k,v)
+for i in istek:
+    factory.setCrypto(i, str(istek[i]["sell"]))
+
+liste = ["CHF","USD","CAD","EUR","TRY"]
+
+for i in liste:
+    Goster.factory(i)
 
